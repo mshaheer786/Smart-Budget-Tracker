@@ -1,0 +1,11 @@
+{
+    "income": 20000.0,
+    "allocations": {
+        "food": 6000.0,
+        "transport": 3000.0,
+        "shopping": 4000.0,
+        "other": 3000.0
+    },
+    "savings": 10000.0,
+    "profile": "2"
+}
