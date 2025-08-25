@@ -99,7 +99,7 @@ def predict_next_month():
         next_month = (datetime.now().month % 12) + 1
         pred = model.predict([[next_month, le_prof.transform([config["profile"]])[0]]])[0]
         predictions[cat] = max(pred, 0)
-    print("\n📊 Predicted Spending for Next Month:")
+    print("\n Predicted Spending for Next Month:")
     for cat, amt in predictions.items():
         print(f"- {cat}: {round(amt,2)}")
     return predictions
@@ -114,15 +114,15 @@ def adjust_budget_suggestions():
         if predicted > allocated:
             suggestions[cat] = round(predicted - allocated, 2)
     if suggestions:
-        print("\n💡 Suggested Adjustments for Next Month:")
+        print("\n Suggested Adjustments for Next Month:")
         for cat, extra in suggestions.items():
             print(f"- Increase budget for {cat} by {extra}")
     else:
-        print("\n✅ Your current budget is sufficient for predicted spending.")
+        print("\n Your current budget is sufficient for predicted spending.")
 
 # ---------------- Setup Budget ---------------- #
 def setup_budget():
-    income = float(input("💵 Enter your monthly income: "))
+    income = float(input(" Enter your monthly income: "))
     print("\nChoose your profile type:\n1. Student\n2. Employee\n3. Businessman")
     profile = input("Enter choice (1/2/3): ")
     if profile == "1":
@@ -150,35 +150,35 @@ def setup_budget():
         allocations = {cat: round(income * frac,2) for cat, frac in allocations.items()}
     config = {"income": income, "allocations": allocations, "savings":0, "profile": profile}
     save_config(config)
-    print("\n✅ Budget setup complete!")
+    print("\n Budget setup complete!")
     adjust_budget_suggestions()
 
 # ---------------- Add Expense ---------------- #
 def add_expense():
     config = load_config()
     if not config:
-        print("⚠️ Run setup first.")
+        print(" Run setup first.")
         return
     category = input(f"Enter category {list(config['allocations'].keys())}: ")
     amount = float(input("Enter expense amount: "))
     description = input("Enter description (optional): ")
 
     if check_overspend(category, amount):
-        print(f"⚠️ Warning: You are likely to overspend in {category}!")
+        print(f" Warning: You are likely to overspend in {category}!")
 
     now = datetime.now()
     month_idx = now.month
     expenses = load_expenses()
     expenses.append({"amount": amount, "category": category, "description": description, "month_idx": month_idx})
     save_expenses(expenses)
-    print(f"✅ Added {amount} to {category} ({description})")
+    print(f" Added {amount} to {category} ({description})")
     adjust_budget_suggestions()
 
 # ---------------- Show Report ---------------- #
 def show_report():
     config = load_config()
     if not config:
-        print("⚠️ Run setup first.")
+        print(" Run setup first.")
         return
     expenses = load_expenses()
     spent_per_category = {}
@@ -194,14 +194,14 @@ def show_report():
         print(f"{cat}: allocated {allocated}, spent {spent}, remaining {remaining}")
     config["savings"] += leftovers
     save_config(config)
-    print("\n💰 Total Savings:", config["savings"])
+    print("\n Total Savings:", config["savings"])
     adjust_budget_suggestions()
 
 # ---------------- Dashboard ---------------- #
 def show_dashboard():
     config = load_config()
     if not config:
-        print("⚠️ Run setup first.")
+        print(" Run setup first.")
         return
 
     expenses = load_expenses()
@@ -209,7 +209,7 @@ def show_dashboard():
     for e in expenses:
         spent_per_category[e["category"]] = spent_per_category.get(e["category"], 0) + e["amount"]
 
-    print("\n📊 Budget Dashboard")
+    print("\n Budget Dashboard")
     print("-" * 40)
     for cat, allocated in config["allocations"].items():
         spent = spent_per_category.get(cat, 0)
@@ -227,7 +227,7 @@ def show_dashboard():
     
     # Show predicted spending
     predictions = predict_next_month()
-    print("\n🔮 Predicted Spending Next Month")
+    print("\n Predicted Spending Next Month")
     for cat, predicted in predictions.items():
         allocated = config["allocations"].get(cat, 0)
         bar_length = 20
@@ -241,18 +241,18 @@ def show_dashboard():
 def export_csv_report():
     expenses = load_expenses()
     if not expenses:
-        print("⚠️ No expenses to export.")
+        print(" No expenses to export.")
         return
     df = pd.DataFrame(expenses)
     filename = f"expense_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
     df.to_csv(filename, index=False)
-    print(f"✅ CSV report exported: {filename}")
+    print(f" CSV report exported: {filename}")
 
 def export_spending_chart():
     expenses = load_expenses()
     config = load_config()
     if not expenses or not config:
-        print("⚠️ Not enough data for chart.")
+        print(" Not enough data for chart.")
         return
 
     spent_per_category = {}
@@ -269,7 +269,7 @@ def export_spending_chart():
     plt.ylabel("Amount Spent")
     plt.savefig("spending_chart.png")
     plt.show()
-    print("✅ Spending chart saved as spending_chart.png")
+    print(" Spending chart saved as spending_chart.png")
 
 
 # ---------------- Main Menu ---------------- #
@@ -299,10 +299,10 @@ def main():
         elif choice == "6":
             export_spending_chart()
         elif choice == "7":
-            print("👋 Goodbye!")
+            print(" Goodbye!")
             break
         else:
-            print("❌ Invalid choice. Try again.")
+            print(" Invalid choice. Try again.")
 
 if __name__ == "__main__":
     main()
